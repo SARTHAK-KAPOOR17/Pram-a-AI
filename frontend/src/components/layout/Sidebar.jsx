@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
+  FolderKanban,
   PlaySquare,
   FileCheck2,
   Sparkles,
@@ -13,10 +14,9 @@ import { cn } from '../../utils/cn.js';
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Test Runs', path: '#test-runs', icon: PlaySquare, badge: 'Phase 2' },
-  { name: 'Test Suites', path: '#suites', icon: Layers, badge: 'Phase 2' },
+  { name: 'Projects', path: '/projects', icon: FolderKanban },
+  { name: 'Test Runs', path: '#test-runs', icon: PlaySquare, badge: 'Phase 3' },
   { name: 'Self-Healing', path: '#healing', icon: Sparkles, badge: 'Phase 4' },
-  { name: 'Verification Specs', path: '#specs', icon: FileCheck2 },
   { name: 'Settings', path: '#settings', icon: Settings },
 ];
 

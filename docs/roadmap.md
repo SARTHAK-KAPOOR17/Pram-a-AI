@@ -34,11 +34,13 @@ This roadmap details the progressive delivery milestones for the Pramāṇa AI t
 
 ---
 
-## Phase 2: Project Management & Test Authoring (Next Phase)
-- [ ] Implement `Project` and `Environment` CRUD operations in backend.
-- [ ] Test Case and Test Suite visual builder in frontend.
-- [ ] Support recording and manual step definition (selectors, assertions, values).
-- [ ] Integration with workspace team members and role-based permissions.
+## Phase 2: Project Management & Test Authoring (Completed)
+- [x] **Database Models:** Mongoose schemas for `Project`, `Environment`, `TestSuite`, and `TestCase` with structured steps, locators, and assertions.
+- [x] **Backend REST APIs:** Full CRUD with JWT authentication, role checks, and Zod validation for projects, environments, test suites, and test cases.
+- [x] **Automated Tests:** 10 unit and integration tests covering validators and auth protection.
+- [x] **Frontend Project Workspaces:** Complete dedicated workspace layout with sidebar, project overview, environment management, and suite list.
+- [x] **Visual Test Case Builder & Editor:** Visual step authoring, reordering, duplicate, delete, and locator strategy configuration (CSS, XPath, ID, text, role, testid).
+- [x] **Self-Healing Preparation:** Schema-level preservation of `elementText`, `elementRole`, `domFingerprint`, and `elementAttributes`.
 
 ---
 

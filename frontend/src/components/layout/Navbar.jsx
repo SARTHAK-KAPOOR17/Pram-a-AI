@@ -44,6 +44,16 @@ export const Navbar = () => {
             >
               Dashboard
             </Link>
+            <Link
+              to="/projects"
+              className={`px-3 py-1.5 rounded-md transition-colors ${
+                location.pathname.startsWith('/projects')
+                  ? 'bg-slate-800 text-teal-400'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+              }`}
+            >
+              Projects
+            </Link>
             <a
               href="#architecture"
               className="px-3 py-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
