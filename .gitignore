@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Playwright & Testing
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+coverage/
+.nyc_output/
+
+# IDE & OS
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Docker
+docker/data/
+mongodb_data/
+
+# Temporary / Scratch
+tmp/
+temp/

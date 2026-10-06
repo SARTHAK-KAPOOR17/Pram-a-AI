@@ -1,0 +1,24 @@
+{
+  "name": "pramana-ai-test-engine",
+  "version": "0.1.0",
+  "description": "Playwright-based browser test execution engine for Pramāṇa AI",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "qa",
+    "automation",
+    "javascript"
+  ],
+  "author": "Pramāṇa AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1"
+  }
+}
