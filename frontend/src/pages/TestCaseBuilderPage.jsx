@@ -46,6 +46,19 @@ const DEFAULT_STEP = {
   showMetadata: false,
 };
 
+const KEYBOARD_KEYS = [
+  'Enter',
+  'Tab',
+  'Escape',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'Backspace',
+  'Delete',
+  'Space',
+];
+
 export const TestCaseBuilderPage = () => {
   const { projectId, testId } = useParams();
   const { project } = useOutletContext();
@@ -122,7 +135,14 @@ export const TestCaseBuilderPage = () => {
             ...s,
             order: idx + 1,
             locator: { ...DEFAULT_STEP.locator, ...(s.locator || {}) },
-            assertion: { ...DEFAULT_STEP.assertion, ...(s.assertion || {}) },
+            assertion: {
+              ...DEFAULT_STEP.assertion,
+              ...(s.assertion || {}),
+              locator: {
+                ...DEFAULT_STEP.assertion.locator,
+                ...(s.assertion?.locator || {}),
+              },
+            },
             showMetadata: false,
           }))
         );
@@ -195,6 +215,9 @@ export const TestCaseBuilderPage = () => {
   const updateStepField = (index, field, value) => {
     const updated = [...steps];
     updated[index][field] = value;
+    if (field === 'action' && value === 'press' && !updated[index].value) {
+      updated[index].value = 'Enter';
+    }
     setSteps(updated);
   };
 
@@ -212,6 +235,20 @@ export const TestCaseBuilderPage = () => {
     updated[index].assertion = {
       ...(updated[index].assertion || {}),
       [field]: value,
+    };
+    setSteps(updated);
+  };
+
+  const updateAssertionLocator = (index, field, value) => {
+    const updated = [...steps];
+    const currentAssertion = updated[index].assertion || {};
+    const currentLocator = currentAssertion.locator || { strategy: 'css', value: '' };
+    updated[index].assertion = {
+      ...currentAssertion,
+      locator: {
+        ...currentLocator,
+        [field]: value,
+      },
     };
     setSteps(updated);
   };
@@ -611,10 +648,10 @@ export const TestCaseBuilderPage = () => {
                           />
                         </div>
 
-                        {['fill', 'press', 'select'].includes(step.action) && (
+                        {step.action === 'fill' && (
                           <div>
                             <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                              INPUT VALUE / KEY
+                              INPUT VALUE
                             </label>
                             <input
                               type="text"
@@ -623,6 +660,43 @@ export const TestCaseBuilderPage = () => {
                               onChange={(e) => updateStepField(idx, 'value', e.target.value)}
                               className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-teal-500"
                             />
+                          </div>
+                        )}
+
+                        {step.action === 'select' && (
+                          <div>
+                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                              Option to select
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Option value or label"
+                              value={step.value || ''}
+                              onChange={(e) => updateStepField(idx, 'value', e.target.value)}
+                              className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-teal-500"
+                            />
+                          </div>
+                        )}
+
+                        {step.action === 'press' && (
+                          <div>
+                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                              Keyboard Key
+                            </label>
+                            <select
+                              value={step.value || 'Enter'}
+                              onChange={(e) => updateStepField(idx, 'value', e.target.value)}
+                              className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-teal-500"
+                            >
+                              {KEYBOARD_KEYS.map((k) => (
+                                <option key={k} value={k}>
+                                  {k}
+                                </option>
+                              ))}
+                              {step.value && !KEYBOARD_KEYS.includes(step.value) && (
+                                <option value={step.value}>{step.value} (Custom)</option>
+                              )}
+                            </select>
                           </div>
                         )}
                       </>
@@ -647,7 +721,7 @@ export const TestCaseBuilderPage = () => {
                       <>
                         <div>
                           <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                            ASSERTION TYPE
+                            ASSERTION
                           </label>
                           <select
                             value={step.assertion?.type || 'visible'}
@@ -665,34 +739,49 @@ export const TestCaseBuilderPage = () => {
                           </select>
                         </div>
 
-                        {/* Assertion Target Locator */}
+                        {/* Assertion Target Locator Strategy & Value */}
                         {['visible', 'hidden', 'text_contains', 'text_equals', 'enabled', 'disabled'].includes(
                           step.assertion?.type || 'visible'
                         ) && (
-                          <div className="md:col-span-2">
-                            <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                              TARGET LOCATOR (CSS)
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="#welcome-message, .alert-banner"
-                              value={step.assertion?.locator?.value || ''}
-                              onChange={(e) =>
-                                updateStepAssertion(idx, 'locator', {
-                                  strategy: 'css',
-                                  value: e.target.value,
-                                })
-                              }
-                              className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-teal-500"
-                            />
-                          </div>
+                          <>
+                            <div>
+                              <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                                LOCATOR STRATEGY
+                              </label>
+                              <select
+                                value={step.assertion?.locator?.strategy || 'css'}
+                                onChange={(e) => updateAssertionLocator(idx, 'strategy', e.target.value)}
+                                className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-200 font-mono focus:outline-none focus:border-teal-500"
+                              >
+                                <option value="css">CSS</option>
+                                <option value="xpath">XPath</option>
+                                <option value="id">ID</option>
+                                <option value="testid">Data Test ID</option>
+                                <option value="text">Visible Text</option>
+                                <option value="role">ARIA Role</option>
+                              </select>
+                            </div>
+
+                            <div className="md:col-span-1">
+                              <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                                LOCATOR
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="#dashboard, [data-testid='...']"
+                                value={step.assertion?.locator?.value || ''}
+                                onChange={(e) => updateAssertionLocator(idx, 'value', e.target.value)}
+                                className="w-full rounded-lg bg-surface-950 border border-slate-800 text-xs px-3 py-2 text-slate-100 font-mono focus:outline-none focus:border-teal-500"
+                              />
+                            </div>
+                          </>
                         )}
 
                         {/* Expected Value for text or url */}
                         {['text_contains', 'text_equals', 'url_contains', 'url_equals'].includes(
                           step.assertion?.type
                         ) && (
-                          <div>
+                          <div className={['url_contains', 'url_equals'].includes(step.assertion?.type) ? 'md:col-span-2' : 'md:col-span-4'}>
                             <label className="block text-[11px] font-mono text-slate-400 mb-1">
                               EXPECTED VALUE
                             </label>

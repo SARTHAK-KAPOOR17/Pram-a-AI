@@ -1,5 +1,27 @@
 import mongoose from 'mongoose';
 
+const encryptedDataSchema = new mongoose.Schema(
+  {
+    encrypted: {
+      type: Boolean,
+      default: false,
+    },
+    iv: {
+      type: String,
+      default: null,
+    },
+    authTag: {
+      type: String,
+      default: null,
+    },
+    ciphertext: {
+      type: String,
+      default: null,
+    },
+  },
+  { _id: false }
+);
+
 const variableSchema = new mongoose.Schema(
   {
     key: {
@@ -15,8 +37,23 @@ const variableSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    encryptedData: {
+      type: encryptedDataSchema,
+      default: null,
+    },
   },
-  { _id: false }
+  {
+    _id: false,
+    toJSON: {
+      transform: (_doc, ret) => {
+        delete ret.encryptedData;
+        if (ret.isSecret) {
+          ret.value = '••••••••';
+        }
+        return ret;
+      },
+    },
+  }
 );
 
 const environmentSchema = new mongoose.Schema(

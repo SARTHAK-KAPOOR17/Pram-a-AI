@@ -10,6 +10,7 @@ const envSchema = z.object({
   MONGODB_URI: z.string().default('mongodb://localhost:27017/pramana_ai'),
   JWT_SECRET: z.string().default('pramana_super_secure_jwt_development_secret_key_32chars'),
   JWT_EXPIRES_IN: z.string().default('7d'),
+  ENCRYPTION_KEY: z.string().default('pramana_aes_256_gcm_secure_key_32bytes!'),
   CLIENT_URL: z.string().default('http://localhost:5173'),
 });
 
