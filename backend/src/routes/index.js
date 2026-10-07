@@ -5,6 +5,8 @@ import projectRoutes from './project.routes.js';
 import environmentRoutes from './environment.routes.js';
 import suiteRoutes from './suite.routes.js';
 import testCaseRoutes from './test-case.routes.js';
+import testRunRoutes from './test-run.routes.js';
+import suiteRunRoutes from './suite-run.routes.js';
 
 const router = Router();
 
@@ -14,5 +16,7 @@ router.use('/projects', projectRoutes);
 router.use('/environments', environmentRoutes);
 router.use('/suites', suiteRoutes);
 router.use('/test-cases', testCaseRoutes);
+router.use('/test-runs', testRunRoutes);
+router.use('/suite-runs', suiteRunRoutes);
 
 export default router;

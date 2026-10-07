@@ -15,6 +15,7 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronUp,
+  Play,
 } from 'lucide-react';
 import { testCaseService } from '../services/test-case.service.js';
 import { suiteService } from '../services/suite.service.js';
@@ -23,6 +24,7 @@ import { Input } from '../components/ui/Input.jsx';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import { LoadingState } from '../components/ui/LoadingState.jsx';
+import { RunTestModal } from '../components/runs/RunTestModal.jsx';
 
 const DEFAULT_STEP = {
   action: 'navigate',
@@ -73,6 +75,7 @@ export const TestCaseBuilderPage = () => {
   const [priority, setPriority] = useState('medium');
   const [status, setStatus] = useState('draft');
   const [tagsInput, setTagsInput] = useState('');
+  const [isRunModalOpen, setIsRunModalOpen] = useState(false);
   const [steps, setSteps] = useState([
     {
       ...DEFAULT_STEP,
@@ -370,6 +373,17 @@ export const TestCaseBuilderPage = () => {
               Cancel
             </Button>
           </Link>
+          {isEditing && (
+            <Button
+              variant="secondary"
+              size="sm"
+              type="button"
+              onClick={() => setIsRunModalOpen(true)}
+              leftIcon={<Play className="w-3.5 h-3.5 text-teal-400" />}
+            >
+              Run Test
+            </Button>
+          )}
           <Button
             size="sm"
             onClick={handleSubmit}
@@ -888,6 +902,15 @@ export const TestCaseBuilderPage = () => {
           </Button>
         </div>
       </div>
+
+      {isEditing && (
+        <RunTestModal
+          isOpen={isRunModalOpen}
+          onClose={() => setIsRunModalOpen(false)}
+          testCase={existingTest || { _id: testId, name, steps }}
+          projectId={projectId}
+        />
+      )}
     </div>
   );
 };

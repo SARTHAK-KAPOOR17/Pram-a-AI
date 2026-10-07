@@ -22,6 +22,7 @@ import { Input } from '../components/ui/Input.jsx';
 import { ConfirmModal } from '../components/ui/ConfirmModal.jsx';
 import { LoadingState } from '../components/ui/LoadingState.jsx';
 import { EmptyState } from '../components/ui/EmptyState.jsx';
+import { RunTestModal } from '../components/runs/RunTestModal.jsx';
 
 export const TestCasesListPage = () => {
   const { project } = useOutletContext();
@@ -34,6 +35,7 @@ export const TestCasesListPage = () => {
   const [selectedPriority, setSelectedPriority] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [deletingTest, setDeletingTest] = useState(null);
+  const [runningTest, setRunningTest] = useState(null);
 
   const { data: suites = [] } = useQuery({
     queryKey: ['suites', projectId],
@@ -243,6 +245,13 @@ export const TestCasesListPage = () => {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => setRunningTest(tc)}
+                            className="p-1.5 rounded hover:bg-teal-950/40 text-teal-400 hover:text-teal-300 transition-colors"
+                            title="Run Test Case"
+                          >
+                            <Play className="w-3.5 h-3.5" />
+                          </button>
                           <Link
                             to={`/projects/${projectId}/tests/${tc._id}/edit`}
                             className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
@@ -276,6 +285,14 @@ export const TestCasesListPage = () => {
         title={`Delete Test Case "${deletingTest?.name}"`}
         description="Are you sure you want to delete this test case? This will remove all associated steps and locator definitions."
         isLoading={deleteMutation.isPending}
+      />
+
+      {/* Run Test Execution Modal */}
+      <RunTestModal
+        isOpen={Boolean(runningTest)}
+        onClose={() => setRunningTest(null)}
+        testCase={runningTest}
+        projectId={projectId}
       />
     </div>
   );

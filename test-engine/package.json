@@ -19,6 +19,6 @@
   "author": "Pramāṇa AI Team",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.49.1"
+    "@playwright/test": "^1.63.0"
   }
 }
