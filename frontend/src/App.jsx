@@ -15,6 +15,8 @@ import { TestSuitesPage } from './pages/TestSuitesPage.jsx';
 import { TestCasesListPage } from './pages/TestCasesListPage.jsx';
 import { TestCaseBuilderPage } from './pages/TestCaseBuilderPage.jsx';
 import { ProjectSettingsPage } from './pages/ProjectSettingsPage.jsx';
+import { ProjectRunsPage } from './pages/ProjectRunsPage.jsx';
+import { RunDetailsPage } from './pages/RunDetailsPage.jsx';
 import { NotFoundPage } from './pages/NotFoundPage.jsx';
 
 const queryClient = new QueryClient({
@@ -45,6 +47,8 @@ export function App() {
             <Route path="tests" element={<TestCasesListPage />} />
             <Route path="tests/new" element={<TestCaseBuilderPage />} />
             <Route path="tests/:testId/edit" element={<TestCaseBuilderPage />} />
+            <Route path="runs" element={<ProjectRunsPage />} />
+            <Route path="runs/:runId" element={<RunDetailsPage />} />
             <Route path="settings" element={<ProjectSettingsPage />} />
           </Route>
 

@@ -5,12 +5,17 @@ import { config } from './config/env.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { notFoundHandler } from './middleware/not-found.js';
 import { errorHandler } from './middleware/error-handler.js';
+import path from 'node:path';
 import apiRoutes from './routes/index.js';
 
 const app = express();
 
-// Security Headers
-app.use(helmet());
+// Security Headers (configured to allow cross-origin asset loading for screenshots)
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
 // CORS Configuration
 app.use(
@@ -30,6 +35,9 @@ app.use(
 // Body Parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Static execution artifacts (screenshots, traces)
+app.use('/artifacts', express.static(path.resolve(process.cwd(), 'artifacts')));
 
 // Request Logging
 app.use(requestLogger);

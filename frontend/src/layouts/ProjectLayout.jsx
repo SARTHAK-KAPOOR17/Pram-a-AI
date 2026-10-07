@@ -60,10 +60,8 @@ export const ProjectLayout = () => {
     },
     {
       name: 'Test Runs',
-      path: '#test-runs',
+      path: `/projects/${projectId}/runs`,
       icon: PlaySquare,
-      badge: 'Phase 3',
-      disabled: true,
     },
     {
       name: 'Settings',
