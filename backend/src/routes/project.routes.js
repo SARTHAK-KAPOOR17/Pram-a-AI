@@ -18,7 +18,7 @@ import {
   createTestCase,
   getTestCasesByProject,
 } from '../controllers/test-case.controller.js';
-import { getRunsByProject } from '../controllers/test-run.controller.js';
+import { getRunsByProject, getSuiteRunsByProject } from '../controllers/test-run.controller.js';
 import { authenticate } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
@@ -63,5 +63,8 @@ router.get('/:projectId/test-cases', getTestCasesByProject);
 
 // Nested routes: Test Runs
 router.get('/:projectId/test-runs', getRunsByProject);
+
+// Nested routes: Suite Runs
+router.get('/:projectId/suite-runs', getSuiteRunsByProject);
 
 export default router;

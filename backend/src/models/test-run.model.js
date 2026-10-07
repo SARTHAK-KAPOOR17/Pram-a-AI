@@ -43,6 +43,10 @@ const stepResultSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    failureDetails: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
   },
   { _id: false }
 );
@@ -50,6 +54,18 @@ const stepResultSchema = new mongoose.Schema(
 const testRunArtifactsSchema = new mongoose.Schema(
   {
     screenshot: {
+      type: String,
+      default: null,
+    },
+    trace: {
+      type: String,
+      default: null,
+    },
+    video: {
+      type: String,
+      default: null,
+    },
+    networkHar: {
       type: String,
       default: null,
     },
@@ -76,6 +92,11 @@ const testRunSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'TestCase',
       required: [true, 'TestRun must belong to a test case'],
+    },
+    suiteRunId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SuiteRun',
+      default: null,
     },
     environmentId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -106,6 +127,7 @@ const testRunSchema = new mongoose.Schema(
     },
     browser: {
       type: String,
+      enum: ['chromium', 'firefox', 'webkit'],
       default: 'chromium',
     },
     error: {
@@ -117,6 +139,28 @@ const testRunSchema = new mongoose.Schema(
       default: () => ({}),
     },
     stepResults: [stepResultSchema],
+    consoleLogs: [
+      {
+        type: { type: String, default: 'log' },
+        text: { type: String, default: '' },
+        timestamp: { type: Date, default: Date.now },
+        location: { type: String, default: null },
+      },
+    ],
+    networkLogs: [
+      {
+        method: { type: String, default: 'GET' },
+        url: { type: String, default: '' },
+        status: { type: Number, default: 0 },
+        resourceType: { type: String, default: '' },
+        duration: { type: Number, default: 0 },
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
+    failureDetails: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -126,7 +170,9 @@ const testRunSchema = new mongoose.Schema(
 // Performance indexes for querying runs
 testRunSchema.index({ projectId: 1, createdAt: -1 });
 testRunSchema.index({ testCaseId: 1, createdAt: -1 });
+testRunSchema.index({ suiteRunId: 1 });
 testRunSchema.index({ environmentId: 1 });
 testRunSchema.index({ status: 1 });
 
 export const TestRun = mongoose.model('TestRun', testRunSchema);
+

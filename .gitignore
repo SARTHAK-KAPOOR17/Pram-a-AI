@@ -48,3 +48,5 @@ mongodb_data/
 # Temporary / Scratch
 tmp/
 temp/
+backend/artifacts/
+artifacts/

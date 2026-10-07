@@ -10,6 +10,7 @@ import {
   Tag,
   ArrowRight,
   AlertCircle,
+  Play,
 } from 'lucide-react';
 import { suiteService } from '../services/suite.service.js';
 import { Button } from '../components/ui/Button.jsx';
@@ -20,6 +21,7 @@ import { ConfirmModal } from '../components/ui/ConfirmModal.jsx';
 import { Input } from '../components/ui/Input.jsx';
 import { LoadingState } from '../components/ui/LoadingState.jsx';
 import { EmptyState } from '../components/ui/EmptyState.jsx';
+import { RunSuiteModal } from '../components/runs/RunSuiteModal.jsx';
 
 export const TestSuitesPage = () => {
   const { project } = useOutletContext();
@@ -29,6 +31,7 @@ export const TestSuitesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSuite, setEditingSuite] = useState(null);
   const [deletingSuite, setDeletingSuite] = useState(null);
+  const [runningSuite, setRunningSuite] = useState(null);
 
   // Form State
   const [name, setName] = useState('');
@@ -214,13 +217,24 @@ export const TestSuitesPage = () => {
                     <span>{suite.testCount || 0} Test Cases</span>
                   </div>
 
-                  <Link
-                    to={`/projects/${projectId}/tests?suiteId=${suite._id}`}
-                    className="text-teal-400 hover:text-teal-300 inline-flex items-center gap-1 text-[11px]"
-                  >
-                    <span>View Tests</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setRunningSuite(suite)}
+                      className="text-teal-400 hover:text-teal-300 inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded bg-teal-950/50 border border-teal-800/60 transition-colors"
+                      title="Run all tests in this suite"
+                    >
+                      <Play className="w-3 h-3 fill-current" />
+                      <span>Run</span>
+                    </button>
+                    <Link
+                      to={`/projects/${projectId}/tests?suiteId=${suite._id}`}
+                      className="text-slate-400 hover:text-slate-200 inline-flex items-center gap-1 text-[11px]"
+                    >
+                      <span>Tests</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -292,6 +306,16 @@ export const TestSuitesPage = () => {
         description="Are you sure you want to delete this test suite? The associated test cases will not be deleted, but will become unassigned."
         isLoading={deleteMutation.isPending}
       />
+
+      {/* Run Suite Modal */}
+      {runningSuite && (
+        <RunSuiteModal
+          isOpen={Boolean(runningSuite)}
+          onClose={() => setRunningSuite(null)}
+          suite={runningSuite}
+          projectId={projectId}
+        />
+      )}
     </div>
   );
 };
